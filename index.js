@@ -37,15 +37,6 @@ const intQuestions = [
 // Define an array to handle each employee class object added
 const empSet = [];
 
-
-// function writeToFile(data) {
-//     // Generated team page goes here
-//     const teamPage = ''; 
-//     fs.writeFile(`MyTeam.html`, teamPage, (err) =>
-//     err ? console.error(err) : console.log('Success!'));
-// }
-
-
 // Function definition for writing initial HTML
 function headerHTML() {
     let headHTML =
@@ -67,16 +58,27 @@ function headerHTML() {
 } 
 
 function cardHtml (employee) {
-    console.log(employee);
+    let subInfo = '';
+    switch (employee.getRole()){
+        case 'Manager':
+            subInfo = `Office number: ${employee.officeNumber}`;
+            break;
+        case 'Engineer':
+            subInfo = `GitHub: <a href = "https://github.com/${employee.gitHub}">${employee.gitHub}</a>`;
+            break;
+        case 'Intern':
+            subInfo = `School: ${employee.school}`;
+            break;
+    }
     let cardHTML =
     `
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title">${employee.getIcon()}   ${employee.name}</h5>
+                    <h5 class="card-title">${employee.getIcon()}${employee.name}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">${employee.getRole()}</h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <p class="card-text">ID: ${employee.id}</p>
+                    <p class="card-text">Email: <a href="mailto:${employee.email}">${employee.email}</a></p>
+                    <p class="card-text" id = "last">${subInfo}</p>
                 </div>
             </div>
   `;
@@ -147,6 +149,7 @@ inquirer.prompt(manQuestions)
 .then (data => {
     let newManager = new Manager(data.manName, data.manID, data.manEmail, data.manOffice);
     console.log(newManager.getRole());
+    console.log(newManager);
     empSet.push(newManager);
     cardHtml(newManager);
     menu();
