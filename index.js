@@ -34,9 +34,6 @@ const intQuestions = [
     {type: 'input', message: `What is the intern's school?`, name: 'school'},     
 ];
 
-// Define an array to handle each employee class object added
-const empSet = [];
-
 // Function definition for writing initial HTML
 function headerHTML() {
     let headHTML =
@@ -47,6 +44,7 @@ function headerHTML() {
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Team Webpage</title>
+        <script src="https://use.fontawesome.com/cd4252186f.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         <link rel="stylesheet" href="style.css"/>
     </head>
@@ -57,6 +55,7 @@ function headerHTML() {
     fs.writeFile('./dist/TeamPage.html', headHTML, (err) => { if(err) console.log(err)});
 } 
 
+// Function definition for writing and appending the HTML for each employee card
 function cardHtml (employee) {
     let subInfo = '';
     switch (employee.getRole()){
@@ -74,7 +73,7 @@ function cardHtml (employee) {
     `
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title">${employee.getIcon()}${employee.name}</h5>
+                    <h5 class="card-title">${employee.getIcon()}  ${employee.name}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">${employee.getRole()}</h6>
                     <p class="card-text">ID: ${employee.id}</p>
                     <p class="card-text">Email: <a href="mailto:${employee.email}">${employee.email}</a></p>
@@ -87,6 +86,7 @@ function cardHtml (employee) {
 
 }
 
+// Function definition for adding the ending HTML code to complete the webpage
 function endHtml (employee) {
     let lastHTML =
     `    
@@ -111,7 +111,6 @@ function menu() {
                 intern();
                 break;
             case 'Finish': 
-                console.log('finish');
                 endHtml();
                 break;
         }
@@ -123,7 +122,6 @@ function engineer() {
     inquirer.prompt(engQuestions)
     .then(data => {
         let newEngineer = new Engineer(data.engName, data.engID, data.engEmail, data.gitHub);
-        empSet.push(newEngineer);
         cardHtml(newEngineer);
         menu();
     });
@@ -134,7 +132,6 @@ function intern() {
     inquirer.prompt(intQuestions)
     .then(data => {
         let newIntern = new Intern(data.intName, data.intID, data.intEmail, data.school);
-        empSet.push(newIntern);
         cardHtml(newIntern);
         menu();
     });
@@ -148,9 +145,6 @@ headerHTML();
 inquirer.prompt(manQuestions)
 .then (data => {
     let newManager = new Manager(data.manName, data.manID, data.manEmail, data.manOffice);
-    console.log(newManager.getRole());
-    console.log(newManager);
-    empSet.push(newManager);
     cardHtml(newManager);
     menu();
 })

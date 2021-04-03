@@ -16,12 +16,12 @@ describe("Engineer class", () => {
         }
         )
     });
-    // describe("the getEmail() method", () => {
-    //     it("returns this.email", () => {
-    //         let email = employee.getEmail();
-    //         expect(email).toBe('maxson.green@gmail.com');
-    //     }
-    //     )
-    // });
+    describe("the getIcon() method", () => {
+        it("returns the appropriate HTML icon code", () => {
+            let iconCode = engineer.getIcon();
+            expect(iconCode).toBe('<i class="fa fa-flask" aria-hidden="true"></i>');
+        }
+        )
+    });
 
 })

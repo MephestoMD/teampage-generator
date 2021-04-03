@@ -15,12 +15,12 @@ describe("Manager class", () => {
         }
         )
     });
-    // describe("the getEmail() method", () => {
-    //     it("returns this.email", () => {
-    //         let email = employee.getEmail();
-    //         expect(email).toBe('maxson.green@gmail.com');
-    //     }
-    //     )
-    // });
+    describe("the getIcon() method", () => {
+        it("returns the appropriate HTML icon code", () => {
+            let iconCode = manager.getIcon();
+            expect(iconCode).toBe('<i class="fa fa-gavel" aria-hidden="true"></i>');
+        }
+        )
+    });
 
 })
