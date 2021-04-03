@@ -1,5 +1,9 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const Manager = require('./lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+
 // const html = require('generateHTML');
 
 // Define an array of questions to handle the initial manager questions
@@ -16,19 +20,21 @@ const menuQuestion = {type: 'checkbox', message: `Would you like to add an engin
 
 // Define questions for adding engineers
 const engQuestions = [
-    {type: 'input', message: `What is the employee's name?`, name: 'engName'},  
-    {type: 'input', message: `What is the employee's email address?`, name: 'engEmail'},
-    {type: 'input', message: `What is the employee's GitHub username?`, name: 'gitHub'},  
+    {type: 'input', message: `What is the engineer's name?`, name: 'engName'},
+    {type: 'input', message: `What is the engineer's ID?`, name: 'engID'},   
+    {type: 'input', message: `What is the engineer's email address?`, name: 'engEmail'},
+    {type: 'input', message: `What is the engineer's GitHub username?`, name: 'gitHub'},  
 ];
 
 // Define questions for adding interns
 const intQuestions = [
-    {type: 'input', message: `What is the employee's name?`, name: 'intName'},  
-    {type: 'input', message: `What is the employee's email address?`, name: 'intEmail'},
-    {type: 'input', message: `What is the employee's school?`, name: 'school'},     
+    {type: 'input', message: `What is the intern's name?`, name: 'intName'},
+    {type: 'input', message: `What is the intern's ID?`, name: 'intID'},   
+    {type: 'input', message: `What is the intern's email address?`, name: 'intEmail'},
+    {type: 'input', message: `What is the intern's school?`, name: 'school'},     
 ];
 
-// Define an array to handle each employee object added
+// Define an array to handle each employee class object added
 const empSet = [];
 
 
@@ -38,6 +44,57 @@ const empSet = [];
 //     fs.writeFile(`MyTeam.html`, teamPage, (err) =>
 //     err ? console.error(err) : console.log('Success!'));
 // }
+
+
+// Function definition for writing initial HTML
+function headerHTML() {
+    let headHTML =
+    `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Team Webpage</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+    <body>
+        <h1><header>My Team</header></h1>
+        <div id = "cardspace">`;
+    
+    fs.writeFile('./dist/TeamPage.html', headHTML, (err) => { if(err) console.log(err)});
+} 
+
+function cardHtml (employee) {
+    console.log(employee);
+    let cardHTML =
+    `
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">${employee.getIcon()}   ${employee.name}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${employee.getRole()}</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+  `;
+
+  fs.appendFile('./dist/TeamPage.html', cardHTML, (err) => { if(err) console.log(err)});
+
+}
+
+function endHtml (employee) {
+    let lastHTML =
+    `    
+    </div>
+
+    </body>
+    </html>`;
+
+  fs.appendFile('./dist/TeamPage.html', lastHTML, (err) => { if(err) console.log(err)});
+}
 
 // Function definition for the menu prompt
 function menu() {
@@ -53,7 +110,7 @@ function menu() {
                 break;
             case 'Finish': 
                 console.log('finish');
-                writeToFile();
+                endHtml();
                 break;
         }
         });
@@ -63,8 +120,9 @@ function menu() {
 function engineer() { 
     inquirer.prompt(engQuestions)
     .then(data => {
-        empSet.push(data);
-        console.log(empSet);
+        let newEngineer = new Engineer(data.engName, data.engID, data.engEmail, data.gitHub);
+        empSet.push(newEngineer);
+        cardHtml(newEngineer);
         menu();
     });
 }
@@ -73,18 +131,24 @@ function engineer() {
 function intern() { 
     inquirer.prompt(intQuestions)
     .then(data => {
-        empSet.push(data);
-        console.log(empSet);
+        let newIntern = new Intern(data.intName, data.intID, data.intEmail, data.school);
+        empSet.push(newIntern);
+        cardHtml(newIntern);
         menu();
     });
 }
-       
-          
+
+
+// Function call to write the beginning of the HTML file
+headerHTML();
+
 // Inquirer prompt to begin app
 inquirer.prompt(manQuestions)
 .then (data => {
-    empSet.push(data);
-    console.log(empSet);
+    let newManager = new Manager(data.manName, data.manID, data.manEmail, data.manOffice);
+    console.log(newManager.getRole());
+    empSet.push(newManager);
+    cardHtml(newManager);
     menu();
 })
 
